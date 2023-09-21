@@ -10,9 +10,7 @@ export default function Message({ message }) {
         <>
             <li className={classNames("justify-start flex")}>
                 <div>
-                    <div
-                        // className={classNames("text-gray-700 dark:text-gray-400 bg-white border border-gray-200 shadow-md dark:bg-gray-900 dark:border-gray-700 relative max-w-xl px-4 py-2 rounded-lg shadow")}
-                    >
+                    <div>
                         <p className="block text-white font-bold ">{message.sender}</p>
                     </div>
                     <div

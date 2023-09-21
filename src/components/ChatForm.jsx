@@ -2,24 +2,26 @@ import { useState } from "react";
 import { PaperAirplaneIcon } from "@heroicons/react/solid";
 import { EmojiHappyIcon } from "@heroicons/react/outline";
 import RMQ from "../services/RMQ";
-import axios from "axios";
 
 
 export default function ChatForm() {
   const [message, setMessage] = useState("");
 
+
   const handleFormSubmit = async (e) => {
     e.preventDefault();
 
-    const date = new Date
+    const date = Date.now;
     const msg = {
       message: message,
       timestamp: date.toString(),
       sender: localStorage.getItem("username")
     }
 
-    await axios.post("http://localhost:1234", {queueName: "chat", message: {message: message, timestamp: date.toString(), sender: localStorage.getItem("username")}})
+    await RMQ.sendMessage("chat", msg)
     console.log('mensagem enviada: ', msg)
+
+    setMessage("");
   };
 
   return (
