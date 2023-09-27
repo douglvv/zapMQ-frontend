@@ -16,6 +16,7 @@ const RMQ = {
         return res;
     },
 
+    // envia uma mensagem
     sendMessage: async (queueName, message) => {
         const requestBody = {
             queueName: queueName,
@@ -33,8 +34,7 @@ const RMQ = {
             console.error('Error sending message:', error);
             throw error;
         }
-    },
-
+    }
 
 }
 

@@ -11,10 +11,10 @@ export default function ChatForm() {
   const handleFormSubmit = async (e) => {
     e.preventDefault();
 
-    const date = Date.now;
+    const date = new Date()
     const msg = {
       message: message,
-      timestamp: date.toString(),
+      timestamp: date.toISOString(),
       sender: localStorage.getItem("username")
     }
 
