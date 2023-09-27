@@ -48,7 +48,7 @@ export default function ChatRoom() {
   useEffect(() => {
     startRMQConn()
   }, [])
-  
+
   // ouve por mensagens
   useEffect(() => {
     // busca por novas mensagens a cada 250 milisegundos
@@ -61,8 +61,14 @@ export default function ChatRoom() {
   return (
     <div className="lg:col-span-2 lg:block h-screen max-w-5xl mx-auto">
       <div className="w-full">
-        <div className="p-3 font-extrabold font- bg-white border-b border-gray-200 dark:bg-gray-900 dark:border-gray-700 text-white">
-          ZapMQ
+        <div className="p-3 font-extrabold bg-white border-b border-gray-200 dark:bg-gray-900 dark:border-gray-700 text-white flex justify-between">
+          <div className="flex justify-start">
+            <img src="/zap.svg" alt="" width={33} height={33} />
+            <p className="p-3">ZapMQ</p>
+          </div>
+          <div>
+            <p className="p-3 font-normal">{localStorage.getItem("username")}</p>
+          </div>
         </div>
 
         <div className="relative w-full p-6 overflow-y-auto h-[30rem] bg-white border-b border-gray-200 dark:bg-gray-900 dark:border-gray-700">
