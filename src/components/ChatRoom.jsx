@@ -4,16 +4,11 @@ import ChatForm from "./ChatForm";
 import RMQ from '../services/RMQ'
 import axios from "axios";
 
+// TODO: fazer o useRef não scrollar para baixo toda vez que rodar o loop, apenas quando tiver uma mensagem nova
+
 export default function ChatRoom() {
   const [messages, setMessages] = useState([]);
   const messagesEndRef = useRef(null);
-
-  // scrolla para a ultima mensagem da fila
-  const scrollToBottom = () => {
-    if (messagesEndRef.current) {
-      messagesEndRef.current.scrollIntoView({ behavior: "instant" });
-    }
-  };
 
   // conecta no servidor do RMQ, cria uma fila e 
   // seta um nome aleatório para o usuario
@@ -42,9 +37,13 @@ export default function ChatRoom() {
       const receivedMessages = await axios.get("http://localhost:9876/mensagens");
 
       if (!receivedMessages || !receivedMessages.data) return;
-      if (receivedMessages.data.length !== messages.length) setMessages(receivedMessages.data);
-
-      scrollToBottom(); // scrolla para a ultima mensagem
+      if (receivedMessages.data.length !== messages.length) {
+        setMessages(receivedMessages.data);
+        
+        messagesEndRef.current?.scrollIntoView({ // scrolla para a ultima mensagem
+          behavior: "instant",
+        });
+      }
     } catch (error) {
       console.error("Error fetching messages:", error);
     }
@@ -57,6 +56,7 @@ export default function ChatRoom() {
       consumeQueue();
     }, 250);
   }, [])
+
 
   return (
     <div className="lg:col-span-2 lg:block h-screen max-w-5xl mx-auto">
