@@ -33,29 +33,20 @@ export default function ChatRoom() {
     try {
       const receivedMessages = await axios.get("http://localhost:9876/mensagens");
 
-      if (!receivedMessages || !receivedMessages.data) {
-        return;
-      }
-      if (receivedMessages.data.length !== messages.length) {
-        setMessages(receivedMessages.data);
-      }
+      if (!receivedMessages || !receivedMessages.data) return;
+      if (receivedMessages.data.length !== messages.length) setMessages(receivedMessages.data);
     } catch (error) {
       console.error("Error fetching messages:", error);
     }
   };
 
-  // inicia a conexao
   useEffect(() => {
-    startRMQConn()
-  }, [])
+    startRMQConn() // inicia a conexao
 
-  // ouve por mensagens
-  useEffect(() => {
-    // busca por novas mensagens a cada 250 milisegundos
-    setInterval(() => {
+    setInterval(() => { // loop para buscar mensagens a cada 250ms
       consumeQueue();
-      // console.log(messages)
     }, 250);
+
   }, [])
 
   return (
@@ -81,7 +72,7 @@ export default function ChatRoom() {
           </ul>
         </div>
 
-        <ChatForm handleFormSubmit={'#'} />
+        <ChatForm />
       </div>
     </div>
   );
