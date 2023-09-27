@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import Message from "./Message";
 import ChatForm from "./ChatForm";
 import RMQ from '../services/RMQ'
@@ -6,6 +6,14 @@ import axios from "axios";
 
 export default function ChatRoom() {
   const [messages, setMessages] = useState([]);
+  const messagesEndRef = useRef(null);
+
+  // scrolla para a ultima mensagem da fila
+  const scrollToBottom = () => {
+    if (messagesEndRef.current) {
+      messagesEndRef.current.scrollIntoView({ behavior: "instant" });
+    }
+  };
 
   // conecta no servidor do RMQ, cria uma fila e 
   // seta um nome aleatório para o usuario
@@ -35,6 +43,8 @@ export default function ChatRoom() {
 
       if (!receivedMessages || !receivedMessages.data) return;
       if (receivedMessages.data.length !== messages.length) setMessages(receivedMessages.data);
+
+      scrollToBottom(); // scrolla para a ultima mensagem
     } catch (error) {
       console.error("Error fetching messages:", error);
     }
@@ -46,7 +56,6 @@ export default function ChatRoom() {
     setInterval(() => { // loop para buscar mensagens a cada 250ms
       consumeQueue();
     }, 250);
-
   }, [])
 
   return (
@@ -65,7 +74,10 @@ export default function ChatRoom() {
         <div className="relative w-full p-6 overflow-y-auto h-[30rem] bg-white border-b border-gray-200 dark:bg-gray-900 dark:border-gray-700">
           <ul className="space-y-2">
             {messages.map((message, index) => (
-              <div key={index}>
+              <div
+                key={index}
+                ref={index === messages.length - 1 ? messagesEndRef : null} // seta a ref na ultima mensagem
+              >
                 <Message message={message} />
               </div>
             ))}
