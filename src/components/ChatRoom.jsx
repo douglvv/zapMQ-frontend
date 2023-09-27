@@ -55,7 +55,7 @@ export default function ChatRoom() {
     setInterval(() => {
       consumeQueue();
       // console.log(messages)
-    }, 500);
+    }, 250);
   }, [])
 
   return (
