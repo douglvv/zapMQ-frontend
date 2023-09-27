@@ -1,32 +1,40 @@
 /* eslint-disable react/prop-types */
 import * as timeago from 'timeago.js'
 import { format } from "timeago.js";
-import pt_BR from 'timeago.js/lib/lang/pt_BR'
 
 function classNames(...classes) {
     return classes.filter(Boolean).join(" ");
 }
 
 // configurações do timeago
-timeago.register('pt_BR', pt_BR)
+const customLocaleFunc = (number, index, totalSec) => {
+    if (index === 1 && totalSec < 60) {
+        return ['há menos de um minuto', 'em menos de um minuto'];
+    }
+
+    return [
+        ['agora mesmo', 'em breve'],
+        ['%s segundos atrás', 'em %s segundos'],
+        ['1 minuto atrás', 'em 1 minuto'],
+        ['%s minutos atrás', 'em %s minutos'],
+        ['1 hora atrás', 'em 1 hora'],
+        ['%s horas atrás', 'em %s horas'],
+        ['1 dia atrás', 'em 1 dia'],
+        ['%s dias atrás', 'em %s dias'],
+        ['1 semana atrás', 'em 1 semana'],
+        ['%s semanas atrás', 'em %s semanas'],
+        ['1 mês atrás', 'em 1 mês'],
+        ['%s meses atrás', 'em %s meses'],
+        ['1 ano atrás', 'em 1 ano'],
+        ['%s anos atrás', 'em %s anos'],
+    ][index];
+};
+timeago.register('pt_BR', customLocaleFunc)
 const options = {
     locale: 'pt_BR',
     strings: {
         prefixAgo: 'há',
-        prefixFromNow: 'em',
-        suffixAgo: null,
-        suffixFromNow: null,
-        seconds: 'menos de um minuto',
-        minute: 'cerca de um minuto',
-        minutes: '%d minutos',
-        hour: 'cerca de uma hora',
-        hours: 'cerca de %d horas',
-        day: 'um dia',
-        days: '%d dias',
-        month: 'cerca de um mês',
-        months: '%d meses',
-        year: 'cerca de um ano',
-        years: '%d anos',
+        prefixFromNow: 'em',        
     },
 };
 
