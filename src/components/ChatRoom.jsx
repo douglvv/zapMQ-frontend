@@ -4,8 +4,6 @@ import ChatForm from "./ChatForm";
 import RMQ from '../services/RMQ'
 import axios from "axios";
 
-// TODO: fazer o useRef não scrollar para baixo toda vez que rodar o loop, apenas quando tiver uma mensagem nova
-
 export default function ChatRoom() {
   const [messages, setMessages] = useState([]);
   const messagesEndRef = useRef(null);
@@ -39,10 +37,6 @@ export default function ChatRoom() {
       if (!receivedMessages || !receivedMessages.data) return;
       if (receivedMessages.data.length !== messages.length) {
         setMessages(receivedMessages.data);
-        
-        messagesEndRef.current?.scrollIntoView({ // scrolla para a ultima mensagem
-          behavior: "instant",
-        });
       }
     } catch (error) {
       console.error("Error fetching messages:", error);
@@ -50,12 +44,20 @@ export default function ChatRoom() {
   };
 
   useEffect(() => {
-    startRMQConn() // inicia a conexao
+    startRMQConn(); // inicia a conexao
 
     setInterval(() => { // loop para buscar mensagens a cada 250ms
       consumeQueue();
     }, 250);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
+
+  // scrolla para o final quando recebe uma nova mensagem
+  useEffect(() => {
+    messagesEndRef.current?.scrollIntoView({
+      behavior: "instant",
+    });
+  }, [messages.length]);
 
 
   return (
@@ -64,10 +66,10 @@ export default function ChatRoom() {
         <div className="p-3 font-extrabold bg-white border-b border-gray-200 dark:bg-gray-900 dark:border-gray-700 text-white flex justify-between">
           <div className="flex justify-start">
             <img src="/zap.svg" alt="" width={33} height={33} />
-            <p className="p-3">ZapMQ</p>
+            <p className="p-3 text-gray-400">ZapMQ</p>
           </div>
           <div>
-            <p className="p-3 font-normal">{localStorage.getItem("username")}</p>
+            <p className="p-3 font-normal text-gray-400">{localStorage.getItem("username")}</p>
           </div>
         </div>
 
